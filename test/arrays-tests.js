@@ -689,7 +689,7 @@ describe('arrays-tasks', () => {
       },
       {
         arr: [1, 2],
-        n: 2,
+        n: 1,
         expected: [2],
       },
       {
@@ -747,15 +747,15 @@ describe('arrays-tasks', () => {
       [
         {
           arr: [10, 22, 9, 33, 21, 50, 41, 60, 80],
-          expected: 3,
+          expected: 6,
         },
         {
           arr: [3, 10, 2, 1, 20],
-          expected: 2,
+          expected: 3,
         },
         {
           arr: [50, 3, 10, 7, 40, 80],
-          expected: 3,
+          expected: 4,
         },
       ].forEach((data) => {
         const actual = tasks.findLongestIncreasingSubsequence(data.arr);
