@@ -200,7 +200,7 @@ describe('arrays-tasks', () => {
     () => {
       [
         {
-          arr: ['apple', 'banana', 'cherry'],
+          arr: ['applee', 'banana', 'cherry'],
           expected: true,
         },
         {
