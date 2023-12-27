@@ -399,8 +399,8 @@ describe('arrays-tasks', () => {
           ],
         },
         {
-          n: 0,
-          size: 0,
+          n: 1,
+          size: 1,
           expected: [0],
         },
       ].forEach((data) => {
