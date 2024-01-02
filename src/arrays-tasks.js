@@ -31,19 +31,21 @@ function getIntervalArray(start, end) {
 
 /**
  * Returns a new array where each element is the sum of the corresponding elements
- * from two arrays of equal length.
+ * from two arrays. Arrays can have different lengths.
  *
  * @param {array} arr1 - The first array.
  * @param {array} arr2 - The second array.
  * @return {array} - An array containing the sum of corresponding elements.
  *
  * @example
- *    addArrays([1, 2, 3], [4, 5, 6]) => [5, 7, 9]
- *    addArrays([10, 20, 30], [5, 10, 15]) => [15, 30, 45]
- *    addArrays([-1, 0, 1], [1, 2, 3]) => [0, 2, 4]
+ *    sumArrays([1, 2, 3], [4, 5, 6]) => [5, 7, 9]
+ *    sumArrays([10, 20, 30], [5, 10, 15]) => [15, 30, 45]
+ *    sumArrays([-1, 0, 1], [1, 2, 3, 4]) => [0, 2, 4, 4]
  */
-function addArrays(arr1, arr2) {
-  return arr1.map((value, index) => value + arr2[index]);
+function sumArrays(arr1, arr2) {
+  return new Array(Math.max(arr1.length, arr2.length))
+    .fill()
+    .map((_, index) => (arr1[index] || 0) + (arr2[index] || 0));
 }
 
 /**
@@ -104,7 +106,7 @@ function removeFalsyValues(arr) {
 }
 
 /**
- * Returns the array of string lengths from the specified string array.
+ * Returns an array containing the lengths of each string in a specified array of strings.
  *
  * @param {array} arr - The input array.
  * @return {array} - The array of string lengths.
@@ -128,8 +130,8 @@ function getStringsLength(arr) {
  *   getAverage([]) => 0
  *   getAverage([ 1, 2, 3 ]) => 2
  *   getAverage([ -1, 1, -1, 1 ]) => 0
- *   getAverage[ 1, 10, 100, 1000 ]  => 277,75
- *   getAverage[ 2, 3, 3 ]  => 2,67
+ *   getAverage([ 1, 10, 100, 1000 ])  => 277,75
+ *   getAverage([ 2, 3, 3 ])  => 2,67
  */
 function getAverage(arr) {
   const sum = arr.reduce((acc, value) => acc + value, 0);
@@ -146,7 +148,7 @@ function getAverage(arr) {
  * @return {boolean} - True if all strings have the same length, false otherwise.
  *
  * @example
- *    isSameLength(['apple', 'banana', 'cherry']) => true
+ *    isSameLength(['orange', 'banana', 'cherry']) => true
  *    isSameLength(['cat', 'dog', 'elephant']) => false
  */
 function isSameLength(arr) {
@@ -212,7 +214,7 @@ function getHead(arr, n) {
  *    getTail([ 'a', 'b', 'c', 'd'], 0) => []
  */
 function getTail(arr, n) {
-  return arr.slice(-n);
+  return !n ? [] : arr.slice(-n);
 }
 
 /**
@@ -270,8 +272,9 @@ function distinct(arr) {
  * @return {array} - The n-dimensional array filled with zeros.
  *
  * @example
- *    createNDimensionalArray(2, 3) => [ [0, 0, 0], [0, 0, 0], [0, 0, 0] ]
- *    createNDimensionalArray(3, 2) => [ [ [0, 0], [0, 0] ], [ [0, 0], [0, 0] ] ]
+ *    createNDimensionalArray(2, 3) => [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+ *    createNDimensionalArray(3, 2) => [[[0, 0], [0, 0]], [[0, 0], [0, 0]]]
+ *    createNDimensionalArray(4, 2) => [[[[0, 0], [0, 0]], [[0, 0], [0, 0]]], [[[0, 0], [0, 0]], [[0, 0], [0, 0]]]]
  *    createNDimensionalArray(1, 1) => [0]
  */
 function createNDimensionalArray(n, size) {
@@ -526,45 +529,25 @@ function findCommonElements(arr1, arr2) {
  * @return {number} - The length of the longest increasing subsequence.
  *
  * @example
- *    findLongestIncreasingSubsequence([10, 22, 9, 33, 21, 50, 41, 60, 80]) => 6
- *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => 3
- *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => 4
+ *    findLongestIncreasingSubsequence([10, 22, 9, 33, 21, 50, 41, 60, 80]) => 3
+ *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => 2
+ *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => 3
  */
 function findLongestIncreasingSubsequence(nums) {
-  const checkedValues = {};
-  const allLength = [];
+  let max = 1;
 
-  nums.map((value, index) => {
-    let counter = 1;
+  nums.reduce((acc, value, index, initialNums) => {
+    const nextValue = initialNums[index + 1];
 
-    if (!checkedValues[value]) {
-      const slicedNums = nums.slice(index);
-      let lastValue = slicedNums[0];
-
-      checkedValues[lastValue] = true;
-
-      slicedNums.map((slicedValue, slicedIndex, initialNums) => {
-        const nextValue =
-          slicedIndex === initialNums.length - 1
-            ? undefined
-            : initialNums[slicedIndex + 1];
-
-        if (lastValue <= nextValue) {
-          checkedValues[nextValue] = true;
-          lastValue = nextValue;
-          counter += 1;
-        }
-
-        return slicedValue;
-      });
-
-      allLength.push(counter);
+    if (nextValue < value || !nextValue) {
+      if (acc > max) max = acc;
+      return 1;
     }
 
-    return value;
-  });
+    return acc + 1;
+  }, max);
 
-  return Math.max(...allLength);
+  return max;
 }
 
 /**
@@ -677,7 +660,7 @@ function swapHeadAndTail(arr) {
 
 module.exports = {
   getIntervalArray,
-  addArrays,
+  sumArrays,
   findElement,
   findAllOccurrences,
   removeFalsyValues,
